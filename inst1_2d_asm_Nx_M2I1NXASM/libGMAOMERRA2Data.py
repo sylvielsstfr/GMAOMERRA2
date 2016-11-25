@@ -175,7 +175,7 @@ def AreaSelect(X,Y,data,LongMin,LongMax,LatMin,LatMax):
 #---------------------------------------------------------------------------------    
     
 #---------------------------------------------------------------------------------    
-def SelectBin(X,Y,data,Long0,Lat0,DLong=1.0,DLat=1.0):
+def SelectBin(X,Y,data,Long0,Lat0,DLong=0.625,DLat=0.498614958449):
     '''
     SelectBin(X,Y,data,Long0,Lat0,DLong=1.0,DLat=1.0)
     =================================================
