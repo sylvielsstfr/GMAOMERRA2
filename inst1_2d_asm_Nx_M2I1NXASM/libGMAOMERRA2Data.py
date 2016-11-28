@@ -98,7 +98,8 @@ def GetGeoRefData(file,datafield):
     long_name = nc4f[datafield].attrs['long_name']
     _FillValue = nc4f[datafield].attrs['_FillValue']
     data[data == _FillValue] = np.nan
-    data = np.ma.masked_where(np.isnan(data), data)    
+    data = np.ma.masked_where(np.isnan(data), data)
+    #nc4f.close()
     
     return data,units,long_name
 #-----------------------------------------------------------------------------    
@@ -126,6 +127,7 @@ def Get1DData(file,datafield):
     data = nc4f[datafield]
     units = nc4f[datafield].attrs['units']
     long_name = nc4f[datafield].attrs['long_name']
+    #nc4f.close()
     
     
     return data,units,long_name
@@ -216,7 +218,46 @@ def SelectBin(X,Y,data,Long0,Lat0,DLong=0.625,DLat=0.498614958449):
     return sel_min_long_index,sel_min_lat_index,extracted_data[0][0]    
 #---------------------------------------------------------------------------------    
     
+  #---------------------------------------------------------------------------------    
+def GetBinIndex(X,Y,Long0,Lat0,DLong=0.625,DLat=0.498614958449):
+    '''
+    GetBinIndex(X,Y,Long0,Lat0,DLong=1.0,DLat=1.0)
+    =================================================
     
+    Select one bin    
+    
+    input:
+    -----
+        X,Y        : Longitude and Latitude 2D array
+        Long0,Lat0 : The Longitude and Latitude of the bin
+        DLong,DLat : The angular bin width
+    
+    output:
+    ------
+        sel_min_long_index,sel_min_lat_index : index of selected bin 
+        extracted_data                       : data of the selected bin
+    
+    '''
+    sel_flags_long=np.logical_and(X>=Long0-float(DLong)/2., X<=Long0+float(DLong)/2.)   # flags in X where are the selected longitudes
+    sel_flags_lat=np.logical_and(Y>=Lat0-float(DLat)/2., Y<=Lat0+float(DLat)/2.)      # flags in Y where are the selected longitudes
+    sel_flags_longlat=np.logical_and(sel_flags_long,sel_flags_lat)  # flags where the region is selected in the long-lat matrix
+
+    (selected_lat_indexes,selected_long_indexes)=np.where(sel_flags_longlat==True) # list of indexes
+
+
+    selected_X=X[:,selected_long_indexes] # all selected longitudes
+    selected_Y=Y[selected_lat_indexes,:] 
+
+    sel_min_long_index=np.min(selected_long_indexes)
+    sel_max_long_index=np.max(selected_long_indexes)
+
+    sel_min_lat_index=np.min(selected_lat_indexes)
+    sel_max_lat_index=np.max(selected_lat_indexes)
+
+    #extracted_data=data[sel_min_lat_index:sel_max_lat_index+1,sel_min_long_index:sel_max_long_index+1] # extract the data
+    
+    return sel_min_long_index,sel_min_lat_index   
+#---------------------------------------------------------------------------------   
     
 #---------------------------------------------------------------------------------
 def PlotData(X,Y,data,sizex=8,sizey=8,labelx='longitude',labely='latitude',labelz='Unit',title=''):
