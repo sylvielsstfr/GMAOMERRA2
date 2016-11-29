@@ -3,3 +3,6 @@
 *.jpg
 *.png
 *.dylib
+*.fits
+*.csv
+*.pyc
