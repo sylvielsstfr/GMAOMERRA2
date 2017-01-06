@@ -56,12 +56,13 @@ def loc_lsst():
     return(Longitude_lsst,Latitude_lsst,Altitude_lsst)
     
 def loc_ohp():
-    return(Longitude_lsst,Latitude_lsst,Altitude_lsst)
+    return(Longitude_ohp,Latitude_ohp,Altitude_ohp)
     
 def loc_none():
     return(0,0,0)
+#--------------------------------------------------------------------    
     
-    
+#--------------------------------------------------------------------    
 def observatory_location(obs):
     if obs== 'ctio':
         loc=loc_ctio()
@@ -72,6 +73,7 @@ def observatory_location(obs):
     else:
         loc=loc_none()
     return loc
+#--------------------------------------------------------------------
                                                                                                                  
 
 #---------------------------------------------------------------------------------
