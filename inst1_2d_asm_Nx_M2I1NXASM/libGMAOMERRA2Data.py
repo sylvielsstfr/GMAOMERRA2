@@ -6,9 +6,6 @@ libGMAOLERRA2Data.py
 Author : Sylvie Dagoret-Campagne
 Date   : November 25th 2016
 Update : April 25th 2018
-
-
-
 -----------------------------------------------------------------------------
 """
 
@@ -299,7 +296,78 @@ def PlotData(X,Y,data,sizex=8,sizey=8,labelx='longitude',labely='latitude',label
     plt.show()
 #------------------------------------------------------------------------------------
 
+#---------------------------------------------------------------------------------
+def PlotGeoData(X,Y,data,sizex=25,sizey=8,labelx='longitude',labely='latitude',labelz='Unit',title=''):
+    '''
+        ==============================================================================================
 
+    Plot in matplotlib the 2D array of data
+
+    input:
+    ------
+        X,Y   : 2D array of lontitude and latitude
+        data  : Data array
+        sizex,sizey   :  size of figure
+        labelx,labely,labelz,title : labels of axis and title
+        
+    output:
+        figure in matplotlib
+    
+    '''
+
+    plt.figure(figsize=(sizex,sizey))    
+  
+    m = Basemap(projection='cyl', resolution='l',
+                llcrnrlat=-90, urcrnrlat=90,
+                llcrnrlon=-180, urcrnrlon=180)
+    m.drawcoastlines(linewidth=1,color="yellow")
+    m.drawparallels(np.arange(-90, 91, 45),labels=[True],color='white')
+    m.drawmeridians(np.arange(-180, 180, 45), labels=[True,False,False,True],color='white')
+    m.pcolormesh(X, Y, data, latlon=True)
+    cb = m.colorbar()    
+    cb.set_label(labelz)
+    plt.title(title)
+    plt.show()
+#------------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------
+def PlotGeoData2(X,Y,data,sizex=25,sizey=8,labelx='longitude',labely='latitude',labelz='Unit',title=''):
+    '''
+        ==============================================================================================
+
+    Plot in matplotlib the 2D array of data
+
+    input:
+    ------
+        X,Y   : 2D array of lontitude and latitude
+        data  : Data array
+        sizex,sizey   :  size of figure
+        labelx,labely,labelz,title : labels of axis and title
+        
+    output:
+        figure in matplotlib
+    
+    '''
+
+    plt.figure(figsize=(sizex,sizey))    
+    
+    m = Basemap(projection='cyl', resolution='l',
+                llcrnrlat=LatMin, urcrnrlat=LatMax,
+                llcrnrlon= LongMin, urcrnrlon=LongMax)
+    m.drawcoastlines(linewidth=1,color="yellow")
+    #m.drawparallels(np.arange(-90, 91, 45))
+    #m.drawmeridians(np.arange(-180, 180, 45), labels=[True,False,False,True])
+    
+    m.drawparallels(np.arange(LatMin,LatMax,10),labels=[True],linewidth=1, color='white')
+    m.drawmeridians(np.arange(LongMin,LongMax,10),labels=[True,False,False,True],linewidth=1, color='white')
+    
+    m.pcolormesh(X, Y, data, latlon=True)
+    cb = m.colorbar()    
+    cb.set_label(labelz)
+    plt.title(title)
+    
+    plt.show()
+#------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
@@ -307,6 +375,9 @@ if __name__ == "__main__":
     
     DATAFIELD_NAME =  'TO3'
     DATAFIELD_UNIT = DATAFIELD_NAME+' (Ozone:Db) '
+    
+    DATAFIELD_NAME =  'TQV'
+    DATAFIELD_UNIT = DATAFIELD_NAME+' (PWV:mm) '
     
     #os.environ["HDFEOS_ZOO_DIR"] = "/Users/dagoret-campagnesylvie/MacOSX/LSST/MyWork/GitHub/GMAOMERRA2data/inst1_2d_asm_Nx_M2I1NXASM"
     os.environ["HDFEOS_ZOO_DIR"] = "/sps/lsst/data/AtmosphericCalibration/MERRA-2/May-Jun-2017/subset_M2I1NXASM_V5.12.4_20180424_201411"
@@ -332,12 +403,14 @@ if __name__ == "__main__":
     
     
     (data3D,unit,longname)=GetGeoRefData(FILE_NAME,DATAFIELD_NAME)
-    data= data3D[0,:,:] ## Ozone has no additional dimensions
+    
+    data= data3D[0,:,:] ## the first index is the time, for example take the first one
+    
     (lat,un_lat,nm_lat) = Get1DData(FILE_NAME,'lat')
     latitude = lat[:]
     (lon,un_lon,nm_lon) = Get1DData(FILE_NAME,'lon')
     longitude = lon[:]
-    (tim,un_tim,nm_tim)=Get1DData(FILE_NAME,'time')
+    (tim,un_tim,nm_tim) = Get1DData(FILE_NAME,'time')
     thetime=tim[:]
     
     
@@ -350,11 +423,15 @@ if __name__ == "__main__":
     #-------------------------
     PlotData(longitude,latitude,data,7,3.5,title=base_filename,labelz=longname)
     
+    PlotGeoData(longitude,latitude,data,7,3.5,title=base_filename,labelz=longname)
+               
     # Select area
     LongMin=-100
     LongMax=-30
     LatMin=-55
     LatMax=15  
+    
+    PlotGeoData2(longitude,latitude,data,6,7,title=base_filename,labelz=longname)
     
     X=longitude
     Y=latitude

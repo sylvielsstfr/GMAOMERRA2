@@ -36,7 +36,7 @@ def run(FILE_NAME):
     
     with h5py.File(FILE_NAME, mode='r') as f:
 
-        name = '/T500'
+        name = 'TO3'
         data = f[name][23,:,:]
         units = f[name].attrs['units']
         long_name = f[name].attrs['long_name']
@@ -78,7 +78,9 @@ if __name__ == "__main__":
 
     # If a certain environment variable is set, look there for the input
     # file, otherwise look in the current directory.
-    hdffile = 'MERRA2_400.tavg1_2d_slv_Nx.20140101.nc4'
+    os.environ["HDFEOS_ZOO_DIR"] = "/sps/lsst/data/AtmosphericCalibration/MERRA-2/May-Jun-2017/subset_M2I1NXASM_V5.12.4_20180424_201411"
+    #hdffile = 'MERRA2_400.tavg1_2d_slv_Nx.20140101.nc4'
+    hdffile = 'MERRA2_400.inst1_2d_asm_Nx.20170603.nc4'
 
     try:
         hdffile = os.path.join(os.environ['HDFEOS_ZOO_DIR'], hdffile)
