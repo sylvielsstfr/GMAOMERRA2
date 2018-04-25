@@ -4,7 +4,8 @@ libGMAOLERRA2Data.py
 =================
 
 Author : Sylvie Dagoret-Campagne
-Date   : November 25 2016
+Date   : November 25th 2016
+Update : April 25th 2018
 
 
 
@@ -307,11 +308,13 @@ if __name__ == "__main__":
     DATAFIELD_NAME =  'TO3'
     DATAFIELD_UNIT = DATAFIELD_NAME+' (Ozone:Db) '
     
-    os.environ["HDFEOS_ZOO_DIR"] = "/Users/dagoret-campagnesylvie/MacOSX/LSST/MyWork/GitHub/GMAOMERRA2data/inst1_2d_asm_Nx_M2I1NXASM"
+    #os.environ["HDFEOS_ZOO_DIR"] = "/Users/dagoret-campagnesylvie/MacOSX/LSST/MyWork/GitHub/GMAOMERRA2data/inst1_2d_asm_Nx_M2I1NXASM"
+    os.environ["HDFEOS_ZOO_DIR"] = "/sps/lsst/data/AtmosphericCalibration/MERRA-2/May-Jun-2017/subset_M2I1NXASM_V5.12.4_20180424_201411"
 
     # If a certain environment variable is set, look there for the input
     # file, otherwise look in the current directory.
-    hdffile = 'MERRA2_400.inst1_2d_asm_Nx.20161001.nc4'
+    #hdffile = 'MERRA2_400.inst1_2d_asm_Nx.20161001.nc4'
+    hdffile = 'MERRA2_400.inst1_2d_asm_Nx.20170603.nc4'
     
    
     FILE_NAME= hdffile
