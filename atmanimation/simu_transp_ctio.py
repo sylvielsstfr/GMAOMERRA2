@@ -53,7 +53,8 @@ NB_Frames=len(selected_indexes)
 fig, ax = plt.subplots()
 fig.set_tight_layout(True)
 ax.grid(True)
-ax.set_title('Atmospheric transparency CTIO Jun 2017')
+ax.set_title('Atmospheric transparency CTIO Obs May-Jun 2017')
+ax.set_ylabel('atm. transparency')
 
 transp_curv, = ax.plot(WL, transp[selected_indexes[0],:], 'r-', linewidth=2)
 
@@ -66,11 +67,13 @@ print('fig size: {0} DPI, size in inches {1}'.format(
 def update(i):
     
     sel_index=selected_indexes[i]
-    label = str(sel_index)+' :: ',df_ctio.index.get_values()[sel_index]
-    print(label)
+    label = 'wavelength (nm) '+str(i)+') date :: ',df_ctio.index.get_values()[sel_index]
+    #print(label)
+    tau_cloud=data[sel_index+1,index_atm_cloud]
+    att_cloud=np.exp(-tau_cloud)
     # Update the line and the axes (with a new xlabel). Return a tuple of
     # "artists" that have to be redrawn for this frame.
-    transp_curv.set_ydata(transp[sel_index,:])
+    transp_curv.set_ydata(att_cloud*transp[sel_index,:])
     ax.set_xlabel(label)
     return transp_curv, ax
 
