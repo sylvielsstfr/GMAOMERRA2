@@ -73,7 +73,8 @@ def update(i):
     att_cloud=np.exp(-tau_cloud)
     # Update the line and the axes (with a new xlabel). Return a tuple of
     # "artists" that have to be redrawn for this frame.
-    transp_curv.set_ydata(att_cloud*transp[sel_index,:])
+    #transp_curv.set_ydata(att_cloud*transp[sel_index,:])
+    transp_curv.set_ydata(transp[sel_index,:])
     ax.set_xlabel(label)
     return transp_curv, ax
 
