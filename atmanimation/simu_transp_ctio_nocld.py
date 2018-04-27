@@ -45,6 +45,8 @@ df_ctio=df_ctio.reindex(columns=['date','P','T','RH','airmass','seeing','exposur
 
 transp=data[1:,index_atm_data:]
 WL=data[0,index_atm_data:]
+
+
 transp_sum=np.sum(transp,axis=1)
 selected_indexes=np.where(transp_sum>0)[0]
 
