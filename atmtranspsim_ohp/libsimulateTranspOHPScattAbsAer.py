@@ -1059,7 +1059,7 @@ if __name__ == "__main__":
     
     if AerosolTest_Flag==False:
         try:
-            opts, args = getopt.getopt(sys.argv[1:],"hz:w:o:p:m",["z=","w=","o=","p=","m="])
+            opts, args = getopt.getopt(sys.argv[1:],"hz:w:o:p:m:",["z=","w=","o=","p=","m="])
         except getopt.GetoptError:
             print ' Exception bad getopt with :: '+sys.argv[0]+ ' -z <airmass> -w <pwv> -o <oz> -p <press> -m <model>'
             sys.exit(2)
@@ -1163,7 +1163,7 @@ if __name__ == "__main__":
     
     else:
         try:
-            opts, args = getopt.getopt(sys.argv[1:],"hz:w:o:a:p:",["z=","w=","o=","a=","p=","m="])
+            opts, args = getopt.getopt(sys.argv[1:],"hz:w:o:a:p:m:",["z=","w=","o=","a=","p=","m="])
         except getopt.GetoptError:
             print ' Exception bad getopt with :: '+sys.argv[0]+ ' -z <airmass> -w <pwv> -o <oz> -a <aer> -p <press> -m <model>'
             sys.exit(2)
