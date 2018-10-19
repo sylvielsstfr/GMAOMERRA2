@@ -6,3 +6,9 @@
 *.fits
 *.csv
 *.pyc
+*.pdf
+*.jpg
+*.png
+*.txt
+*.h5
+*randommseed
