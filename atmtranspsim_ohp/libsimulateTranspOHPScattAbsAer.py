@@ -90,13 +90,14 @@ def usageaer():
 
 def usage():
     print "*******************************************************************"
-    print sys.argv[0],' -z <airmass> -w <pwv> -o <oz> -a<aer> -p <P> -m<mod>'
+    print sys.argv[0],' -z <airmass> -w <pwv> -o <oz> -a<aer> -p <P> -m<mod> -q<proc>'
     print ' \t - airmass from 1.0 to 3.0, typical z=1 '
     print ' \t - pwv is precipitable watr vapor in kg per m2 or mm, typical pwv = 5.18 mm'
     print ' \t - oz ozone in Dobson units from 200 DU to 400 DU'
     print ' \t - aer means Aerosols, typical a=0.04  '
     print ' \t - p Pressure in hPa, typical P=775.3 hPa  '
     print ' \t - m Atmospheric model, typical m=us '
+    print ' \t - q Interaction processes, typical q=sa for scattering and absorption'
     print 'Number of arguments:', len(sys.argv), 'arguments.'
     print 'Argument List:', str(sys.argv)    
     print "*******************************************************************"
@@ -126,7 +127,7 @@ def ApplyAerosols(wl,tr,thelambda0,tau0,alpha0):
 #-----------------------------------------------------------------------------
 
 
-def ProcessSimulation(airmass_num,pwv_num,oz_num,press_num,prof_str='us'):
+def ProcessSimulation(airmass_num,pwv_num,oz_num,press_num,prof_str='us',proc_str='sa'):
     """
     ProcessSimulation(airmass_num,pwv_num,oz_num) 
     No aerosol simulation is performed
@@ -139,8 +140,14 @@ def ProcessSimulation(airmass_num,pwv_num,oz_num,press_num,prof_str='us'):
     print ' 3) oz = ', oz_num
     print ' 4) pressure  = ',press_num
     print ' 5) atmospheric profile = ',prof_str 
+    print ' 6) interaction processes = ',proc_str 
     print '--------------------------------------------'    
    
+    # set the interaction process
+    
+    #Proc='sa'  # Pure absorption and Rayleigh scattering : Clear sky without aerosols
+    if proc_str in ["sa","ab","sc","ae","as"]:
+        Proc=proc_str
    
     # set the selected atmosphere
     if prof_str in ["us","ms","mw","tp","ss","sw"]:
@@ -149,7 +156,7 @@ def ProcessSimulation(airmass_num,pwv_num,oz_num,press_num,prof_str='us'):
     ensure_dir(TOPDIR)
 
     
-    Proc='sa'  # Pure absorption and Rayleigh scattering : Clear sky without aerosols
+    
     
     # build the part 1 of filename
     BaseFilename_part1=Prog+'_'+Obs+'_'+Rte+'_'
@@ -348,7 +355,7 @@ def ProcessSimulation(airmass_num,pwv_num,oz_num,press_num,prof_str='us'):
 
 
 #------------------------------------------------------------------------------
-def ProcessSimulationaer(airmass_num,pwv_num,oz_num,aer_num,press_num,prof_str='us'):  
+def ProcessSimulationaer(airmass_num,pwv_num,oz_num,aer_num,press_num,prof_str='us',proc_str='sa'):  
     """
     ProcessSimulationaer(airmass_num,pwv_num,oz_num,aer_num,press_num) 
     with aerosol simulation is performed
@@ -364,8 +371,15 @@ def ProcessSimulationaer(airmass_num,pwv_num,oz_num,aer_num,press_num,prof_str='
         print ' 4) aer = ',aer_num
         print ' 5) pressure =',press_num
         print ' 6) profile =',prof_str
+        print ' 7) interaction processes = ',proc_str 
         print '--------------------------------------------'
-            
+    
+    
+    #Proc='sa'  # Pure absorption and Rayleigh scattering : Clear sky without aerosols
+    if proc_str in ["sa","ab","sc","as","ae"]:
+        Proc=proc_str
+        
+        
     # set the selected atmosphere
     if prof_str in ["us","ms","mw","tp","ss","sw"]:
         Atm=[prof_str]
@@ -383,7 +397,7 @@ def ProcessSimulationaer(airmass_num,pwv_num,oz_num,aer_num,press_num,prof_str='
     # Set up type of run
     runtype='aerosol_special' #'no_scattering' #aerosol_special #aerosol_default# #'clearsky'#     
     
-    Proc='as'  # Absoprtion + Rayleigh + aerosols special
+    #Proc='as'  # Absoprtion + Rayleigh + aerosols special
     
     
     if Proc == 'sc':
