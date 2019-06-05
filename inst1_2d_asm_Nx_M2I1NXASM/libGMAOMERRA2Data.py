@@ -6,6 +6,7 @@ libGMAOLERRA2Data.py
 Author : Sylvie Dagoret-Campagne
 Date   : November 25th 2016
 Update : April 25th 2018
+Update : June 5th 2019
 -----------------------------------------------------------------------------
 """
 
@@ -31,6 +32,7 @@ Altitude_ctio = 2214.9999999993697 #m
 Longitude_paranal = -70.40300000000002 #deg
 Latitude_paranal  = -24.625199999999996 #deg
 Altitude_paranal = 2635.0000000009704 #m
+
 # Observatoire de Haute Provence
 Longitude_ohp=5.71222222222
 Latitude_ohp=43.9316666667

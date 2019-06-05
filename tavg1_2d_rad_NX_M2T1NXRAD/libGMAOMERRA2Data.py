@@ -6,6 +6,7 @@ libGMAOLERRA2Data.py
 Author : Sylvie Dagoret-Campagne
 Date   : November 25th 2016
 Update : April 25th 2018
+Update : June 5th 2019
 
 
 
@@ -34,10 +35,16 @@ Altitude_ctio = 2214.9999999993697 #m
 Longitude_paranal = -70.40300000000002 #deg
 Latitude_paranal  = -24.625199999999996 #deg
 Altitude_paranal = 2635.0000000009704 #m
+
 # Observatoire de Haute Provence
 Longitude_ohp=5.71222222222
 Latitude_ohp=43.9316666667
 Altitude_ohp=650.    
+
+#observatoire du Pic du Midi
+Longitude_pdm = 0.142777 # deg
+Latitude_pdm = 42.9363888 #deg
+Altitude_pdm = 2877.0 #m
     
 
 #--------------------------------------------------------------------------
@@ -58,6 +65,9 @@ def loc_lsst():
     
 def loc_ohp():
     return(Longitude_ohp,Latitude_ohp,Altitude_ohp)
+
+def loc_pdm():
+    return(Longitude_pdm,Latitude_pdm,Altitude_pdm) 
     
 def loc_none():
     return(0,0,0)
@@ -71,6 +81,8 @@ def observatory_location(obs):
         loc=loc_lsst()
     elif obs=='ohp':
         loc=loc_ohp()
+    elif obs=='pdm':
+        loc=loc_pdm()    
     else:
         loc=loc_none()
     return loc
