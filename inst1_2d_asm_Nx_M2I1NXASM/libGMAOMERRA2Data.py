@@ -35,7 +35,11 @@ Altitude_paranal = 2635.0000000009704 #m
 Longitude_ohp=5.71222222222
 Latitude_ohp=43.9316666667
 Altitude_ohp=650.    
-    
+
+#observatoire du Pic du Midi
+Longitude_pdm = 0.142777 # deg
+Latitude_pdm = 42.9363888 #deg
+Altitude_pdm = 2877.0 #m
 
 #--------------------------------------------------------------------------
 def ensure_dir(f):
@@ -55,6 +59,9 @@ def loc_lsst():
     
 def loc_ohp():
     return(Longitude_ohp,Latitude_ohp,Altitude_ohp)
+
+def loc_pdm():
+    return(Longitude_pdm,Latitude_pdm,Altitude_pdm) 
     
 def loc_none():
     return(0,0,0)
@@ -68,6 +75,8 @@ def observatory_location(obs):
         loc=loc_lsst()
     elif obs=='ohp':
         loc=loc_ohp()
+    elif obs=='pdm':
+        loc=loc_pdm()
     else:
         loc=loc_none()
     return loc
