@@ -49,6 +49,10 @@ Longitude_mpl = -116.86300000000003 #
 Latitude_mpl = 33.35600000000001 # deg
 Altitude_mpl = 1706.0 #
 
+all_longs = [Longitude_lsst, Longitude_paranal, Longitude_ohp, Longitude_pdm , Longitude_mpl]
+all_lats = [ Latitude_lsst, Latitude_paranal , Latitude_ohp, Latitude_pdm, Latitude_mpl]
+all_tags = ["LSST","Paranal","OHP","PDM","Palomar"]
+
 #--------------------------------------------------------------------------
 def ensure_dir(f):
     '''
@@ -271,9 +275,20 @@ def GetBinIndex(X,Y,Long0,Lat0,DLong=0.625,DLat=0.498614958449):
     
     return sel_min_long_index,sel_min_lat_index   
 #---------------------------------------------------------------------------------   
-    
+
+
+# xpt,ypt = m(lon,lat) 
+# convert back to lat/lon
+# lonpt, latpt = m(xpt,ypt,inverse=True)
+# m.plot(xpt,ypt,'bo')  # plot a blue dot there
+# put some text next to the dot, offset a little bit
+# (the offset is in map projection coordinates)
+# plt.text(xpt+100000,ypt+100000,'Boulder (%5.1fW,%3.1fN)' % (lonpt,latpt))
+
+#m.scatter(x,y,3,marker='o',color='k')
+
 #---------------------------------------------------------------------------------
-def PlotData(X,Y,data,sizex=8,sizey=8,labelx='longitude',labely='latitude',labelz='Unit',title=''):
+def PlotData(X,Y,data,sizex=8,sizey=8,labelx='longitude',labely='latitude',labelz='Unit',title='',longs=None,lats=None,tags=None):
     '''
     PlotData(X,Y,data,sizex=8,sizey=8,labelx='longitude',labely='latitude',labelz='Unit',title='')
     ==============================================================================================
@@ -306,11 +321,15 @@ def PlotData(X,Y,data,sizex=8,sizey=8,labelx='longitude',labely='latitude',label
     plt.ylabel(labely)
     plt.title(title)
     #plt.tight_layout()
+    plt.grid(color="white")
+    if (longs != None) & (lats != None):
+        plt.scatter(longs,lats,s=10,c="r",marker='o')
+    
     plt.show()
 #------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------
-def PlotGeoData(X,Y,data,sizex=25,sizey=8,labelx='longitude',labely='latitude',labelz='Unit',title=''):
+def PlotGeoData(X,Y,data,sizex=25,sizey=8,labelx='longitude',labely='latitude',labelz='Unit',title='',longs=None,lats=None,tags=None):
     '''
         ==============================================================================================
 
@@ -337,6 +356,11 @@ def PlotGeoData(X,Y,data,sizex=25,sizey=8,labelx='longitude',labely='latitude',l
     m.drawparallels(np.arange(-90, 91, 45),labels=[True],color='white')
     m.drawmeridians(np.arange(-180, 180, 45), labels=[True,False,False,True],color='white')
     m.pcolormesh(X, Y, data, latlon=True)
+    if (longs != None) & (lats != None):
+        x,y = m(longs,lats)
+        m.plot(x, y, c='r',lw=0,markersize=10)
+        m.scatter(x, y, s=10, c='r', marker='o', zorder=2)
+        #m.scatter(longs,lats,3,marker='o',color='r',ms=10)
     cb = m.colorbar()    
     cb.set_label(labelz)
     plt.title(title)
@@ -344,7 +368,7 @@ def PlotGeoData(X,Y,data,sizex=25,sizey=8,labelx='longitude',labely='latitude',l
 #------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------
-def PlotGeoData2(X,Y,data,sizex=25,sizey=8,labelx='longitude',labely='latitude',labelz='Unit',title=''):
+def PlotGeoData2(X,Y,data,LatMin,LatMax,LongMin,LongMax,sizex=25,sizey=8,labelx='longitude',labely='latitude',labelz='Unit',title='',longs=None,lats=None,tags=None):
     '''
     ==============================================================================================
 
@@ -364,10 +388,10 @@ def PlotGeoData2(X,Y,data,sizex=25,sizey=8,labelx='longitude',labely='latitude',
 
     plt.figure(figsize=(sizex,sizey))    
     
-    m = Basemap(projection='cyl', resolution='l',
-                llcrnrlat=LatMin, urcrnrlat=LatMax,
-                llcrnrlon= LongMin, urcrnrlon=LongMax)
+    m = Basemap(projection='cyl', resolution='l',llcrnrlat=LatMin, urcrnrlat=LatMax,llcrnrlon= LongMin, urcrnrlon=LongMax)
     m.drawcoastlines(linewidth=1,color="yellow")
+    m.drawcountries(color="grey")
+    m.drawstates(color="k")
     #m.drawparallels(np.arange(-90, 91, 45))
     #m.drawmeridians(np.arange(-180, 180, 45), labels=[True,False,False,True])
     
@@ -378,6 +402,11 @@ def PlotGeoData2(X,Y,data,sizex=25,sizey=8,labelx='longitude',labely='latitude',
     cb = m.colorbar()    
     cb.set_label(labelz)
     plt.title(title)
+    if (longs != None) & (lats != None):
+        x,y = m(longs,lats)
+        m.plot(x, y, c='r',lw=0,markersize=30)
+        m.scatter(x, y, s=30, c='r', marker='o', zorder=2)
+        #m.scatter(longs,lats,3,marker='o',color='r',ms=10)
     
     plt.show()
 #------------------------------------------------------------------------------------
