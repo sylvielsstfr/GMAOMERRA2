@@ -6,7 +6,7 @@ libGMAOLERRA2Data.py
 Author : Sylvie Dagoret-Campagne
 Date   : November 25th 2016
 Update : April 25th 2018
-Update : June 5th 
+Update : June 5th
 Update : 2025-03-25 : Add mont Palomar
 -----------------------------------------------------------------------------
 """
@@ -29,7 +29,7 @@ Longitude_ctio = -70.815 # deg
 Latitude_ctio = -30.165277777777778 #deg
 Altitude_ctio = 2214.9999999993697 #m
 # Cerro Paranal
- 
+
 Longitude_paranal = -70.40300000000002 #deg
 Latitude_paranal  = -24.625199999999996 #deg
 Altitude_paranal = 2635.0000000009704 #m
@@ -61,14 +61,14 @@ def ensure_dir(f):
     d = os.path.dirname(f)
     if not os.path.exists(f):
         os.makedirs(f)
-#-----------------------------------------------------------------------------    
+#-----------------------------------------------------------------------------
 
 def loc_ctio():
     return(Longitude_ctio,Latitude_ctio,Altitude_ctio)
-    
+
 def loc_lsst():
     return(Longitude_lsst,Latitude_lsst,Altitude_lsst)
-    
+
 def loc_ohp():
     return(Longitude_ohp,Latitude_ohp,Altitude_ohp)
 
@@ -77,11 +77,11 @@ def loc_pdm():
 
 def loc_mpl():
     return(Longitude_mpl,Latitude_mpl,Altitude_mpl)
-    
+
 def loc_none():
     return(0,0,0)
-#---------------------------------------------------------------  
-#----------------------------------------------------------------   
+#---------------------------------------------------------------
+#----------------------------------------------------------------
 def observatory_location(obs):
     if obs== 'ctio':
         loc=loc_ctio()
@@ -96,24 +96,24 @@ def observatory_location(obs):
     else:
         loc=loc_none()
     return loc
-#--------------------------------------------------------------------                                                                                                            
+#--------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------
 def GetGeoRefData(file,datafield):
     '''
     GetGeoRefData(file,datafield) : read the data labeled datafield in file
     =================================================================
-    
-    Retrieve data from a HDF file    
-    
-    input : 
+
+    Retrieve data from a HDF file
+
+    input :
     ------
         file : name of input file
         datafield : label of required data field
     output:
     ------
         data3D : output array
-    
+
     '''
     nc4f= h5py.File(file, mode='r')
     data = nc4f[datafield][:,:,:]
@@ -124,7 +124,7 @@ def GetGeoRefData(file,datafield):
     data = np.ma.masked_where(np.isnan(data), data)
     #nc4f.close()
     return data,units,long_name
-#-----------------------------------------------------------------------------    
+#-----------------------------------------------------------------------------
 
 
 #---------------------------------------------------------------------------------
@@ -132,17 +132,17 @@ def Get1DData(file,datafield):
     '''
     Get1DData(file,datafield) : read the data labeled datafield in file
     =================================================================
-    
-    Retrieve data from a HDF file    
-    
-    input : 
+
+    Retrieve data from a HDF file
+
+    input :
     ------
         file : name of input file
         datafield : label of required data field
     output:
     ------
         data3D : output array
-    
+
     '''
     nc4f= h5py.File(file, mode='r')
     data = nc4f[datafield]
@@ -150,7 +150,7 @@ def Get1DData(file,datafield):
     long_name = nc4f[datafield].attrs['long_name']
     #nc4f.close()
     return data,units,long_name
-#-----------------------------------------------------------------------------   
+#-----------------------------------------------------------------------------
 
 
 #--------------------------------------------------------------------------------
@@ -158,20 +158,20 @@ def AreaSelect(X,Y,data,LongMin,LongMax,LatMin,LatMax):
     '''
     AreaSelect(X,Y,data,LongMin,LongMax,LatMin,LatMax)
     ==================================================
-    
-    Select an area    
-    
+
+    Select an area
+
     input:
     ------
-        X,Y  : Longitude and lattitude 2D array 
+        X,Y  : Longitude and lattitude 2D array
         data : Data array
         LongMin,LongMax,LatMin,LatMax : Longitude and Latitude boundaries
-    
+
     output:
     -------
         Xsel,Ysel : Longitude and lattitude 2D array of selected zone
         extracted_data : data array selected
-    
+
     '''
     flags_long=np.logical_and(X>=LongMin, X<=LongMax)   # flags in X where are the selected longitudes
     flags_lat=np.logical_and(Y>=LatMin, Y<=LatMax)      # flags in Y where are the selected longitudes
@@ -187,32 +187,32 @@ def AreaSelect(X,Y,data,LongMin,LongMax,LatMin,LatMax):
     min_lat_index=np.min(selected_lat_indexes)
     max_lat_index=np.max(selected_lat_indexes)
 
-    # output   
+    # output
     extracted_data=data[min_lat_index:max_lat_index,min_long_index:max_long_index] # extract the data
     Xsel=X[min_lat_index:max_lat_index,min_long_index:max_long_index] # extract the Long
-    Ysel=Y[min_lat_index:max_lat_index,min_long_index:max_long_index] # extract the lat  
+    Ysel=Y[min_lat_index:max_lat_index,min_long_index:max_long_index] # extract the lat
     return Xsel,Ysel,extracted_data
-#---------------------------------------------------------------------------------     
-#---------------------------------------------------------------------------------    
+#---------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------
 def SelectBin(X,Y,data,Long0,Lat0,DLong=0.625,DLat=0.498614958449):
     '''
     SelectBin(X,Y,data,Long0,Lat0,DLong=1.0,DLat=1.0)
     =================================================
-    
-    Select one bin    
-    
+
+    Select one bin
+
     input:
     -----
         X,Y        : Longitude and Latitude 2D array
-        data       : 2D array of data 
+        data       : 2D array of data
         Long0,Lat0 : The Longitude and Latitude of the bin
         DLong,DLat : The angular bin width
-    
+
     output:
     ------
-        sel_min_long_index,sel_min_lat_index : index of selected bin 
+        sel_min_long_index,sel_min_lat_index : index of selected bin
         extracted_data                       : data of the selected bin
-    
+
     '''
     sel_flags_long=np.logical_and(X>=Long0-float(DLong)/2., X<=Long0+float(DLong)/2.)   # flags in X where are the selected longitudes
     sel_flags_lat=np.logical_and(Y>=Lat0-float(DLat)/2., Y<=Lat0+float(DLat)/2.)      # flags in Y where are the selected longitudes
@@ -222,7 +222,7 @@ def SelectBin(X,Y,data,Long0,Lat0,DLong=0.625,DLat=0.498614958449):
 
 
     selected_X=X[:,selected_long_indexes] # all selected longitudes
-    selected_Y=Y[selected_lat_indexes,:] 
+    selected_Y=Y[selected_lat_indexes,:]
 
     sel_min_long_index=np.min(selected_long_indexes)
     sel_max_long_index=np.max(selected_long_indexes)
@@ -231,29 +231,29 @@ def SelectBin(X,Y,data,Long0,Lat0,DLong=0.625,DLat=0.498614958449):
     sel_max_lat_index=np.max(selected_lat_indexes)
 
     extracted_data=data[sel_min_lat_index:sel_max_lat_index+1,sel_min_long_index:sel_max_long_index+1] # extract the data
-    
-    return sel_min_long_index,sel_min_lat_index,extracted_data[0][0]    
-#---------------------------------------------------------------------------------    
-    
-  #---------------------------------------------------------------------------------    
+
+    return sel_min_long_index,sel_min_lat_index,extracted_data[0][0]
+#---------------------------------------------------------------------------------
+
+  #---------------------------------------------------------------------------------
 def GetBinIndex(X,Y,Long0,Lat0,DLong=0.625,DLat=0.498614958449):
     '''
     GetBinIndex(X,Y,Long0,Lat0,DLong=1.0,DLat=1.0)
     =================================================
-    
-    Select one bin    
-    
+
+    Select one bin
+
     input:
     -----
         X,Y        : Longitude and Latitude 2D array
         Long0,Lat0 : The Longitude and Latitude of the bin
         DLong,DLat : The angular bin width
-    
+
     output:
     ------
-        sel_min_long_index,sel_min_lat_index : index of selected bin 
+        sel_min_long_index,sel_min_lat_index : index of selected bin
         extracted_data                       : data of the selected bin
-    
+
     '''
     sel_flags_long=np.logical_and(X>=Long0-float(DLong)/2., X<=Long0+float(DLong)/2.)   # flags in X where are the selected longitudes
     sel_flags_lat=np.logical_and(Y>=Lat0-float(DLat)/2., Y<=Lat0+float(DLat)/2.)      # flags in Y where are the selected longitudes
@@ -263,7 +263,7 @@ def GetBinIndex(X,Y,Long0,Lat0,DLong=0.625,DLat=0.498614958449):
 
 
     selected_X=X[:,selected_long_indexes] # all selected longitudes
-    selected_Y=Y[selected_lat_indexes,:] 
+    selected_Y=Y[selected_lat_indexes,:]
 
     sel_min_long_index=np.min(selected_long_indexes)
     sel_max_long_index=np.max(selected_long_indexes)
@@ -272,12 +272,12 @@ def GetBinIndex(X,Y,Long0,Lat0,DLong=0.625,DLat=0.498614958449):
     sel_max_lat_index=np.max(selected_lat_indexes)
 
     #extracted_data=data[sel_min_lat_index:sel_max_lat_index+1,sel_min_long_index:sel_max_long_index+1] # extract the data
-    
-    return sel_min_long_index,sel_min_lat_index   
-#---------------------------------------------------------------------------------   
+
+    return sel_min_long_index,sel_min_lat_index
+#---------------------------------------------------------------------------------
 
 
-# xpt,ypt = m(lon,lat) 
+# xpt,ypt = m(lon,lat)
 # convert back to lat/lon
 # lonpt, latpt = m(xpt,ypt,inverse=True)
 # m.plot(xpt,ypt,'bo')  # plot a blue dot there
@@ -301,10 +301,10 @@ def PlotData(X,Y,data,sizex=8,sizey=8,labelx='longitude',labely='latitude',label
         data  : Data array
         sizex,sizey   :  size of figure
         labelx,labely,labelz,title : labels of axis and title
-        
+
     output:
         figure in matplotlib
-    
+
     '''
 
 
@@ -324,7 +324,7 @@ def PlotData(X,Y,data,sizex=8,sizey=8,labelx='longitude',labely='latitude',label
     plt.grid(color="white")
     if (longs != None) & (lats != None):
         plt.scatter(longs,lats,s=10,c="r",marker='o')
-    
+
     plt.show()
 #------------------------------------------------------------------------------------
 
@@ -341,14 +341,14 @@ def PlotGeoData(X,Y,data,sizex=25,sizey=8,labelx='longitude',labely='latitude',l
         data  : Data array
         sizex,sizey   :  size of figure
         labelx,labely,labelz,title : labels of axis and title
-        
+
     output:
         figure in matplotlib
-    
+
     '''
 
-    plt.figure(figsize=(sizex,sizey))    
-  
+    plt.figure(figsize=(sizex,sizey))
+
     m = Basemap(projection='cyl', resolution='l',
                 llcrnrlat=-90, urcrnrlat=90,
                 llcrnrlon=-180, urcrnrlon=180)
@@ -361,7 +361,7 @@ def PlotGeoData(X,Y,data,sizex=25,sizey=8,labelx='longitude',labely='latitude',l
         m.plot(x, y, c='r',lw=0,markersize=10)
         m.scatter(x, y, s=10, c='r', marker='o', zorder=2)
         #m.scatter(longs,lats,3,marker='o',color='r',ms=10)
-    cb = m.colorbar()    
+    cb = m.colorbar()
     cb.set_label(labelz)
     plt.title(title)
     plt.show()
@@ -380,26 +380,26 @@ def PlotGeoData2(X,Y,data,LatMin,LatMax,LongMin,LongMax,sizex=25,sizey=8,labelx=
         data  : Data array
         sizex,sizey   :  size of figure
         labelx,labely,labelz,title : labels of axis and title
-        
+
     output:
         figure in matplotlib
-    
+
     '''
 
-    plt.figure(figsize=(sizex,sizey))    
-    
+    plt.figure(figsize=(sizex,sizey))
+
     m = Basemap(projection='cyl', resolution='l',llcrnrlat=LatMin, urcrnrlat=LatMax,llcrnrlon= LongMin, urcrnrlon=LongMax)
     m.drawcoastlines(linewidth=1,color="yellow")
     m.drawcountries(color="grey")
     m.drawstates(color="k")
     #m.drawparallels(np.arange(-90, 91, 45))
     #m.drawmeridians(np.arange(-180, 180, 45), labels=[True,False,False,True])
-    
+
     m.drawparallels(np.arange(LatMin,LatMax,10),labels=[True],linewidth=1, color='white')
     m.drawmeridians(np.arange(LongMin,LongMax,10),labels=[True,False,False,True],linewidth=1, color='white')
-    
+
     m.pcolormesh(X, Y, data, latlon=True)
-    cb = m.colorbar()    
+    cb = m.colorbar()
     cb.set_label(labelz)
     plt.title(title)
     if (longs != None) & (lats != None):
@@ -407,20 +407,20 @@ def PlotGeoData2(X,Y,data,LatMin,LatMax,LongMin,LongMax,sizex=25,sizey=8,labelx=
         m.plot(x, y, c='r',lw=0,markersize=30)
         m.scatter(x, y, s=30, c='r', marker='o', zorder=2)
         #m.scatter(longs,lats,3,marker='o',color='r',ms=10)
-    
+
     plt.show()
 #------------------------------------------------------------------------------------
 
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 if __name__ == "__main__":
-    
+
     DATAFIELD_NAME =  'TO3'
     DATAFIELD_UNIT = DATAFIELD_NAME+' (Ozone:Db) '
-    
+
     DATAFIELD_NAME =  'TQV'
     DATAFIELD_UNIT = DATAFIELD_NAME+' (PWV:mm) '
-    
+
     #os.environ["HDFEOS_ZOO_DIR"] = "/Users/dagoret-campagnesylvie/MacOSX/LSST/MyWork/GitHub/GMAOMERRA2data/inst1_2d_asm_Nx_M2I1NXASM"
     #os.environ["HDFEOS_ZOO_DIR"] = "/sps/lsst/data/AtmosphericCalibration/MERRA-2/May-Jun-2017/subset_M2I1NXASM_V5.12.4_20180424_201411"
     os.environ["HDFEOS_ZOO_DIR"] = "/Users/dagoret/DATA/MERRA2/inst1_2d_asm_Nx_M2I1NXASM/2025"
@@ -430,10 +430,10 @@ if __name__ == "__main__":
     #hdffile = 'MERRA2_400.inst1_2d_asm_Nx.20161001.nc4'
     hdffile = 'MERRA2_400.inst1_2d_asm_Nx.20250101.nc4'
     FILE_NAME= hdffile
-    
+
     base_filename=os.path.basename(FILE_NAME).split('.hdf')[0]
     p = re.compile('[.]')
-    root_filename=p.sub('_',base_filename)    
+    root_filename=p.sub('_',base_filename)
     rootimg_dir=os.path.join('test_images',root_filename)
 
     try:
@@ -458,28 +458,28 @@ if __name__ == "__main__":
     # Plot world data
     #-------------------------
     PlotData(longitude,latitude,data,7,3.5,title=base_filename,labelz=longname)
-    
+
     PlotGeoData(longitude,latitude,data,7,3.5,title=base_filename,labelz=longname)
-               
+
     # Select area
     LongMin=-100
     LongMax=-30
     LatMin=-55
-    LatMax=15  
-    
+    LatMax=15
+
     PlotGeoData2(longitude,latitude,data,6,7,title=base_filename,labelz=longname)
-    
+
     X=longitude
     Y=latitude
-    
+
     (Xsel,Ysel,extracted_data) = AreaSelect(X,Y,data,LongMin,LongMax,LatMin,LatMax)
     # plot area
     #------------
     PlotData(Xsel,Ysel,extracted_data,6,6,title=base_filename,labelz=longname)
-    
-    
 
-    
+
+
+
     #LSST site
     Longitude_lsst = -70.7366833333333 # deg
     Latitude_lsst = -30.240741666666672 #deg
@@ -495,32 +495,32 @@ if __name__ == "__main__":
     # Observatoire de Haute Provence
     Longitude_ohp=5.71222222222
     Latitude_ohp=43.9316666667
-    Altitude_ohp=650.    
-    
-    
-    
+    Altitude_ohp=650.
+
+
+
     # Select one bin
     #-----------------
     (ctio_min_long_index, ctio_min_lat_index,extrdata)=SelectBin(X,Y,data,Longitude_ctio,Latitude_ctio)
-        
+
     print('ctio_min_lat_index=',ctio_min_lat_index)
     print('ctio_min_long_index=',ctio_min_long_index)
     print('ctio_data = ',extrdata,DATAFIELD_UNIT)
-    
-    
+
+
     (lsst_min_long_index, lsst_min_lat_index,extrdata)=SelectBin(X,Y,data,Longitude_lsst,Latitude_lsst)
-        
+
     print('lsst_min_lat_index=',lsst_min_lat_index)
     print('lsst_min_long_index=',lsst_min_long_index)
     print('lsst_data = ',extrdata,DATAFIELD_UNIT)
-    
-    
+
+
     (ohp_min_long_index, ohp_min_lat_index,extrdata)=SelectBin(X,Y,data,Longitude_ohp,Latitude_ohp)
-    
+
     print('ohp_min_lat_index=',ohp_min_lat_index)
     print('ohp_min_long_index=',ohp_min_long_index)
     print('ohp_data = ',extrdata,DATAFIELD_UNIT)
-    
-    
-    
+
+
+
 #---------------------------------------------------------------------------------
