@@ -24,6 +24,7 @@ import h5py
 Longitude_lsst = -70.7366833333333 # deg
 Latitude_lsst = -30.240741666666672 #deg
 Altitude_lsst = 2749.999999999238 #m
+
  #CTIO Site
 Longitude_ctio = -70.815 # deg
 Latitude_ctio = -30.165277777777778 #deg
@@ -33,11 +34,24 @@ Altitude_ctio = 2214.9999999993697 #m
 Longitude_paranal = -70.40300000000002 #deg
 Latitude_paranal  = -24.625199999999996 #deg
 Altitude_paranal = 2635.0000000009704 #m
+
+
 # Observatoire de Haute Provence
 Longitude_ohp=5.71222222222
 Latitude_ohp=43.9316666667
 Altitude_ohp=650.    
     
+#observatoire du Pic du Midi
+Longitude_pdm = 0.142777 # deg
+Latitude_pdm = 42.9363888 #deg
+Altitude_pdm = 2877.0 #m
+
+
+#observatoir Mont Palomar (ZTF)
+Longitude_mpl = -116.86300000000003
+Latitude_mpl = 33.35600000000001
+Altitude_mpl = 1706.0
+
 
 #--------------------------------------------------------------------------
 def ensure_dir(f):
@@ -57,6 +71,13 @@ def loc_lsst():
     
 def loc_ohp():
     return(Longitude_ohp,Latitude_ohp,Altitude_ohp)
+
+def loc_pdm():
+    return(Longitude_pdm,Latitude_pdm,Altitude_pdm) 
+
+def loc_mpl():
+    return(Longitude_mpl,Latitude_mpl,Altitude_mpl) 
+    
     
 def loc_none():
     return(0,0,0)
@@ -70,6 +91,10 @@ def observatory_location(obs):
         loc=loc_lsst()
     elif obs=='ohp':
         loc=loc_ohp()
+    elif obs=='pdm':
+        loc=loc_pdm()
+    elif obs=='mpl':
+        loc=loc_mpl()
     else:
         loc=loc_none()
     return loc

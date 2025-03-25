@@ -44,6 +44,12 @@ Longitude_pdm = 0.142777 # deg
 Latitude_pdm = 42.9363888 #deg
 Altitude_pdm = 2877.0 #m
 
+
+#observatoir Mont Palomar (ZTF)
+Longitude_mpl = -116.86300000000003
+Latitude_mpl = 33.35600000000001
+Altitude_mpl = 1706.0
+
 #--------------------------------------------------------------------------
 def ensure_dir(f):
     '''
@@ -66,6 +72,8 @@ def loc_ohp():
 def loc_pdm():
     return(Longitude_pdm,Latitude_pdm,Altitude_pdm) 
 
+def loc_mpl():
+    return(Longitude_mpl,Latitude_mpl,Altitude_mpl) 
 
 def loc_none():
     return(0,0,0)
@@ -81,6 +89,8 @@ def observatory_location(obs):
         loc=loc_ohp()
     elif obs=='pdm':
         loc=loc_pdm()
+    elif obs=='mpl':
+        loc=loc_mpl()
     else:
         loc=loc_none()
     return loc
