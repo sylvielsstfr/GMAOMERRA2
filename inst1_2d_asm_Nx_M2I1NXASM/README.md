@@ -16,3 +16,6 @@ Explore dataset inst1_2d_asm_Nx_M2I1NXASM from GMAO-MERRA2
 generating pandas dataset, saving into a csv file and fits file
 
 - ScanMERRA2_inst1_2d_asm_Nx_M2I1NXASMOneMonth.ipynb
+
+## run batch
+sbatch run_batch_ScanMERRA2_inst1_2d_asm_Nx_M2I1NXASMOneYear_obs_year.sh
