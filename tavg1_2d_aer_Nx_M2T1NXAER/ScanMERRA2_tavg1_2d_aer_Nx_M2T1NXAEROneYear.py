@@ -3,7 +3,7 @@
 
 # # Scan MERRA-2 atmospheric properties during one year
 # ----------------------------------------------------------------------------------
-# 
+#
 # - author: Sylvie Dagoret-Campagne
 # - creation January 12 2017
 # - update January 12 2016
@@ -13,21 +13,21 @@
 # - update 2024/10/15
 # - last update January 2024 28 at CC with kernel ``conda_jax0325_py310``
 # - update 2025/03/25 with anaconda3-py311 (2025) at CC
-# 
-# 
+#
+#
 # Link:
-# 
+#
 # http://disc.sci.gsfc.nasa.gov/datareleases/merra_2_data_release
-# 
+#
 # ### purpose:
-# 
-# Scan One year of MERRA-2 predictions of the dataset tavg1_2d_aer_Nx_M2T1NXAER. 
+#
+# Scan One year of MERRA-2 predictions of the dataset tavg1_2d_aer_Nx_M2T1NXAER.
 # Extract the relevant atmospheric variables.
 # Build the correcponding time series and dataset in pandas.
 # Plot the variables. Save the pandas dataset into a file.
 # Convert the pandas dataset into an astropy fits table and save into a fits file as well.
-# 
-# 
+#
+#
 
 # ## 1) python libraries
 # ---------------------------
@@ -113,7 +113,7 @@ DATA_TITLE=['Total Aerosol Angstrom parameter 470-870 nm',
 NB_DATAFIELDS=len(DATA_TAG)
 
 # The selected data field
-DATA_NAME =  'tavg1_2d_aer_Nx_M2T1NXAER'   # 
+DATA_NAME =  'tavg1_2d_aer_Nx_M2T1NXAER'   #
 
 pandas_filename='MERRA2_'+YEARNUM+'_'+DATA_NAME+'_'+OBS_NAME+'_'+'AllYear'+'.csv'
 fits_filename='MERRA2_'+YEARNUM+'_'+DATA_NAME+'_'+OBS_NAME+'_'+'AllYear' +'.fits'
@@ -129,7 +129,7 @@ loc=merra2.observatory_location(OBS_NAME)
 # ### 2.2) Getting the list of the files
 # ------------------------------
 
-nc4_files = [f for f in os.listdir(path) if f.endswith('.nc4')]  
+nc4_files = [f for f in os.listdir(path) if f.endswith('.nc4')]
 
 print(nc4_files[:5])
 
@@ -162,7 +162,7 @@ full_nc4files=[]
 
 for file in nc4_files:
     fname = os.path.join(path, file)
-    full_nc4files.append(fname)  
+    full_nc4files.append(fname)
 
 
 # ## 3)  Extract data and write them into pandas dataset and time series
@@ -176,7 +176,7 @@ ts2=[]
 df_tavg1_2d_aer_Nx=[] # final pandas dataset for all atmospheric quantities
 
 for file in full_nc4files: # loop on data file of each day of the month
-    
+
     #Retrieve 1D parameters longitude, latitude, time
     try:
         (m_lat,m_un_lat,m_nm_lat) = merra2.Get1DData(file,'lat') # latitude (array, unit, name)
@@ -185,36 +185,36 @@ for file in full_nc4files: # loop on data file of each day of the month
         m_longitude = m_lon[:]
         (m_tim,m_un_tim,m_nm_tim)= merra2.Get1DData(file,'time') # time (array, unit, name)
         m_time=m_tim[:]
-    
+
     except Exception as inst:
         print(type(inst))    # the exception type
         print(inst.args)     # arguments stored in .args
-        print(inst)  
+        print(inst)
         print("SKIP")
         continue
-    
-    # with python3 obliged to transform byte string into a string    
-    m_un_tim2=m_un_tim.decode("utf-8")  
-    
+
+    # with python3 obliged to transform byte string into a string
+    m_un_tim2=m_un_tim.decode("utf-8")
+
     NbDataPerFile=m_time.shape[0] # number of data sample per file
     #start_time = re.findall("^minutes since[ ]([0-9.].+[0-9.].+[0-9.].+)[ ]00:00:00$",m_un_tim) # extract start time
     start_time = re.findall("^minutes since[ ]([0-9.].+[0-9.].+[0-9.].+)",m_un_tim2) # extract start time
-    
+
     #print 'start_time = ', start_time
     time_rng = pd.date_range(start_time[0], periods=NbDataPerFile, freq='H') # one data per hour
-    
+
     #print('---------------------------------------------')
     #print('NbDataPerFile = ', NbDataPerFile)
     #print('start_time = ', start_time)
     #print('time_rng   = ', time_rng[:5])
-    
+
     m_X,m_Y=np.meshgrid(m_longitude,m_latitude) # build meash-grid in longitude and latitude
-    (sel_long, sel_lat)=merra2.GetBinIndex(m_X,m_Y,loc[0],loc[1]) # get bin in longitude and latitude for the site  
-    
- 
+    (sel_long, sel_lat)=merra2.GetBinIndex(m_X,m_Y,loc[0],loc[1]) # get bin in longitude and latitude for the site
+
+
     # loop
     for index in range(NB_DATAFIELDS):
-        (m_data,m_unit,m_longname)=merra2.GetGeoRefData(file,DATA_TAG[index]) # 3D array : time x longitude x latitude  
+        (m_data,m_unit,m_longname)=merra2.GetGeoRefData(file,DATA_TAG[index]) # 3D array : time x longitude x latitude
         dt=m_data[:,sel_lat,sel_long]
         if index==0:
             ts0 = pd.Series(dt, index=time_rng)
@@ -223,14 +223,14 @@ for file in full_nc4files: # loop on data file of each day of the month
         elif index==2:
             ts2 = pd.Series(dt, index=time_rng)
 
-            
+
         #clf_timeseries.append(ts)
         # Create the dataframe
-    df = pd.DataFrame({DATA_TAG[0]: ts0, 
+    df = pd.DataFrame({DATA_TAG[0]: ts0,
                        DATA_TAG[1]: ts1,
                        DATA_TAG[2]: ts2 }, index=time_rng)
-    df_tavg1_2d_aer_Nx.append(df)  
-    
+    df_tavg1_2d_aer_Nx.append(df)
+
 # ### Concatenation
 
 df_tavg1_2d_aer_Nx=pd.concat(df_tavg1_2d_aer_Nx)

@@ -3,7 +3,7 @@
 
 # # Scan MERRA-2 atmospheric properties during one Year
 # ----------------------------------------------------------------------------------
-# 
+#
 # - author: Sylvie Dagoret-Campagne
 # - creation January 12 2017
 # - last update February 17 2023 on imac
@@ -11,14 +11,14 @@
 # - last update January 2024/10/15 at CC with kernel ``conda_jax0325_py310``
 # - at CCIN2P3 anaconda3_py39_auxtel kernel (kernel not working anymore)
 # - loal Python 3 kernel
-# 
+#
 # Link:
-# 
+#
 # http://disc.sci.gsfc.nasa.gov/datareleases/merra_2_data_release
-# 
+#
 # ### purpose:
-# 
-# Scan One month of MERRA-2 predictions of the dataset inst1_2d_asm_Nx_M2I1NXASM. 
+#
+# Scan One month of MERRA-2 predictions of the dataset inst1_2d_asm_Nx_M2I1NXASM.
 # Extract the relevant atmospheric variables.
 # Build the correcponding time series and dataset in pandas.
 # Plot the variables. Save the pandas dataset into a file.
@@ -168,7 +168,7 @@ NB_DATAFIELDS=len(DATA_TAG)
 # ### List of output files
 
 # The selected data field
-DATA_NAME =  'inst1_2d_asm_Nx_M2I1NXASM'   # 
+DATA_NAME =  'inst1_2d_asm_Nx_M2I1NXASM'   #
 
 
 pandas_filename='MERRA2_'+YEARNUM+'_'+DATA_NAME+'_'+OBS_NAME+'_'+'AllYear'+'.csv'
@@ -187,7 +187,7 @@ loc=merra2.observatory_location(OBS_NAME)
 # ------------------------------
 
 
-nc4_files = [f for f in os.listdir(path) if f.endswith('.nc4')]  
+nc4_files = [f for f in os.listdir(path) if f.endswith('.nc4')]
 
 print(nc4_files[:5])
 
@@ -220,7 +220,7 @@ full_nc4files=[]
 
 for file in nc4_files:
     fname = os.path.join(path, file)
-    full_nc4files.append(fname)  
+    full_nc4files.append(fname)
 
 
 # ## 3)  Extract data and write them into pandas dataset and time series
@@ -248,9 +248,9 @@ ts14=[]
 df_inst1_2d_asm_Nx=[] # final pandas dataset for all atmospheric quantities
 
 for file in full_nc4files: # loop on data file of each day of the month
-    
+
     print(file)
-    
+
     #Retrieve 1D parameters longitude, latitude, time
     (m_lat,m_un_lat,m_nm_lat) = merra2.Get1DData(file,'lat') # latitude (array, unit, name)
     m_latitude = m_lat[:]
@@ -258,26 +258,26 @@ for file in full_nc4files: # loop on data file of each day of the month
     m_longitude = m_lon[:]
     (m_tim,m_un_tim,m_nm_tim)= merra2.Get1DData(file,'time') # time (array, unit, name)
     m_time=m_tim[:]
-    
-    # with python3 obliged to transform byte string into a string    
-    m_un_tim2=m_un_tim.decode("utf-8")  
-       
+
+    # with python3 obliged to transform byte string into a string
+    m_un_tim2=m_un_tim.decode("utf-8")
+
     NbDataPerFile=m_time.shape[0] # number of data sample per file
     #start_time = re.findall("^minutes since[ ]([0-9.].+[0-9.].+[0-9.].+)[ ]00:00:00$",m_un_tim) # extract start time
     start_time = re.findall("^minutes since[ ]([0-9.].+[0-9.].+[0-9.].+)",m_un_tim2) # extract start time
-    
+
     #print 'start_time = ', start_time
     time_rng = pd.date_range(start_time[0], periods=NbDataPerFile, freq='H') # one data per hour
-    
 
-    
+
+
     m_X,m_Y=np.meshgrid(m_longitude,m_latitude) # build meash-grid in longitude and latitude
-    (sel_long, sel_lat)=merra2.GetBinIndex(m_X,m_Y,loc[0],loc[1]) # get bin in longitude and latitude for the site  
-    
- 
+    (sel_long, sel_lat)=merra2.GetBinIndex(m_X,m_Y,loc[0],loc[1]) # get bin in longitude and latitude for the site
+
+
     # loop
     for index in range(NB_DATAFIELDS):
-        (m_data,m_unit,m_longname)=merra2.GetGeoRefData(file,DATA_TAG[index]) # 3D array : time x longitude x latitude  
+        (m_data,m_unit,m_longname)=merra2.GetGeoRefData(file,DATA_TAG[index]) # 3D array : time x longitude x latitude
         dt=m_data[:,sel_lat,sel_long]
         if index==0:
             ts0 = pd.Series(dt, index=time_rng)
@@ -294,49 +294,49 @@ for file in full_nc4files: # loop on data file of each day of the month
             ts5 = pd.Series(dt, index=time_rng)
         elif index==6:
             ts6 = pd.Series(dt, index=time_rng)
-            
+
         elif index==7:
             ts7 = pd.Series(dt, index=time_rng)
         elif index==8:
             ts8 = pd.Series(dt, index=time_rng)
         elif index==9:
-            ts9 = pd.Series(dt, index=time_rng)            
-            
+            ts9 = pd.Series(dt, index=time_rng)
+
         elif index==10:
             ts10 = pd.Series(dt, index=time_rng)
         elif index==11:
             ts11 = pd.Series(dt, index=time_rng)
         elif index==12:
-            ts12 = pd.Series(dt, index=time_rng) 
-            
+            ts12 = pd.Series(dt, index=time_rng)
+
         elif index==13:
-            ts13 = pd.Series(dt, index=time_rng) 
+            ts13 = pd.Series(dt, index=time_rng)
         elif index==14:
-            ts14 = pd.Series(dt, index=time_rng) 
-            
-            
+            ts14 = pd.Series(dt, index=time_rng)
+
+
         #clf_timeseries.append(ts)
         # Create the dataframe
-    df = pd.DataFrame({DATA_TAG[0]: ts0, 
+    df = pd.DataFrame({DATA_TAG[0]: ts0,
                        DATA_TAG[1]: ts1,
                        DATA_TAG[2]: ts2,
                        DATA_TAG[3]: ts3,
-                       
+
                        DATA_TAG[4]: ts4,
                        DATA_TAG[5]: ts5,
-                       DATA_TAG[6]: ts6,                       
+                       DATA_TAG[6]: ts6,
 
                        DATA_TAG[7]: ts7,
                        DATA_TAG[8]: ts8,
                        DATA_TAG[9]: ts9,
-                       
+
                        DATA_TAG[10]: ts10,
                        DATA_TAG[11]: ts11,
                        DATA_TAG[12]: ts12,
                        DATA_TAG[13]: ts13,
                        DATA_TAG[14]: ts14 }, index=time_rng)
-    df_inst1_2d_asm_Nx.append(df)  
-    
+    df_inst1_2d_asm_Nx.append(df)
+
 
 
 # ### Concatenation
