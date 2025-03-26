@@ -467,6 +467,9 @@ def PlotGeoData2(X,Y,data,LatMin,LatMax,LongMin,LongMax,sizex=25,sizey=8,labelx=
         m.scatter(x, y, s=30, c='r', marker='o', zorder=2)
         #m.scatter(longs,lats,3,marker='o',color='r',ms=10)
 
+    # Not allowed
+    #m.drawmapscale(Longitude_lsst-20,  Latitude_lsst , Longitude_lsst, Latitude_lsst, 50.0, fontsize = 14)
+
     plt.show()
 #------------------------------------------------------------------------------------
 
