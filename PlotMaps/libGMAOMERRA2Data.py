@@ -98,6 +98,43 @@ def observatory_location(obs):
     return loc
 #--------------------------------------------------------------------
 
+def haversine_distance(origin, destination):
+    """
+    Calculate the Haversine distance.
+
+    Parameters
+    ----------
+    origin : tuple of float
+        (lat, long)
+    destination : tuple of float
+        (lat, long)
+
+    Returns
+    -------
+    distance_in_km : float
+
+    Examples
+    --------
+    >>> origin = (48.1372, 11.5756)  # Munich
+    >>> destination = (52.5186, 13.4083)  # Berlin
+    >>> round(distance(origin, destination), 1)
+    504.2
+    """
+    lat1, lon1 = origin
+    lat2, lon2 = destination
+    radius = 6371  # km
+
+    dlat = np.radians(lat2 - lat1)
+    dlon = np.radians(lon2 - lon1)
+    a = (np.sin(dlat / 2) * np.sin(dlat / 2) +
+         np.cos(np.radians(lat1)) * np.cos(np.radians(lat2)) *
+         np.sin(dlon / 2) * np.sin(dlon / 2))
+    c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1 - a))
+    d = radius * c
+    return d
+
+
+
 #---------------------------------------------------------------------------------
 def GetGeoRefData(file,datafield):
     '''
@@ -288,9 +325,9 @@ def GetBinIndex(X,Y,Long0,Lat0,DLong=0.625,DLat=0.498614958449):
 #m.scatter(x,y,3,marker='o',color='k')
 
 #---------------------------------------------------------------------------------
-def PlotData(X,Y,data,sizex=8,sizey=8,labelx='longitude',labely='latitude',labelz='Unit',title='',longs=None,lats=None,tags=None):
+def PlotData(X,Y,data,sizex=8,sizey=8,labelx='longitude',labely='latitude',labelz='Unit',title='',longs=None,lats=None,tags=None,vrange=None):
     '''
-    PlotData(X,Y,data,sizex=8,sizey=8,labelx='longitude',labely='latitude',labelz='Unit',title='')
+    PlotData(X,Y,data,sizex=8,sizey=8,labelx='longitude',labely='latitude',labelz='Unit',title='',longs=None,lats=None,tags=None,vrange=None)
     ==============================================================================================
 
     Plot in matplotlib the 2D array of data
@@ -309,7 +346,13 @@ def PlotData(X,Y,data,sizex=8,sizey=8,labelx='longitude',labely='latitude',label
 
 
     fig=plt.figure(figsize=(sizex,sizey))
-    im = plt.pcolormesh(X,Y,data)
+    if vrange == None:
+        im = plt.pcolormesh(X,Y,data)
+    else:
+        vmin,vmax = vrange[0],vrange[1]
+        norm = mpl.colors.Normalize(vmin=vmin, vmax=vmax)
+        im = plt.pcolormesh(X,Y,data,norm=norm)
+        
     cbar=plt.colorbar(im, orientation='vertical')
     cbar.set_label(labelz)
     Xmin=X.min()
@@ -329,7 +372,7 @@ def PlotData(X,Y,data,sizex=8,sizey=8,labelx='longitude',labely='latitude',label
 #------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------
-def PlotGeoData(X,Y,data,sizex=25,sizey=8,labelx='longitude',labely='latitude',labelz='Unit',title='',longs=None,lats=None,tags=None):
+def PlotGeoData(X,Y,data,sizex=25,sizey=8,labelx='longitude',labely='latitude',labelz='Unit',title='',longs=None,lats=None,tags=None,vrange=None):
     '''
         ==============================================================================================
 
@@ -355,20 +398,29 @@ def PlotGeoData(X,Y,data,sizex=25,sizey=8,labelx='longitude',labely='latitude',l
     m.drawcoastlines(linewidth=1,color="yellow")
     m.drawparallels(np.arange(-90, 91, 45),labels=[True],color='white')
     m.drawmeridians(np.arange(-180, 180, 45), labels=[True,False,False,True],color='white')
-    m.pcolormesh(X, Y, data, latlon=True)
+
+    if vrange == None:
+        m.pcolormesh(X, Y, data, latlon=True)
+    else:
+        vmin,vmax = vrange[0],vrange[1]
+        norm = mpl.colors.Normalize(vmin=vmin, vmax=vmax)
+        m.pcolormesh(X, Y, data, latlon=True, norm=norm)
+
+    cb = m.colorbar()
+    cb.set_label(labelz)
+    plt.title(title)
+    
     if (longs != None) & (lats != None):
         x,y = m(longs,lats)
         m.plot(x, y, c='r',lw=0,markersize=10)
         m.scatter(x, y, s=10, c='r', marker='o', zorder=2)
         #m.scatter(longs,lats,3,marker='o',color='r',ms=10)
-    cb = m.colorbar()
-    cb.set_label(labelz)
-    plt.title(title)
+  
     plt.show()
 #------------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------------
-def PlotGeoData2(X,Y,data,LatMin,LatMax,LongMin,LongMax,sizex=25,sizey=8,labelx='longitude',labely='latitude',labelz='Unit',title='',longs=None,lats=None,tags=None):
+def PlotGeoData2(X,Y,data,LatMin,LatMax,LongMin,LongMax,sizex=25,sizey=8,labelx='longitude',labely='latitude',labelz='Unit',title='',longs=None,lats=None,tags=None,vrange=None):
     '''
     ==============================================================================================
 
@@ -398,9 +450,16 @@ def PlotGeoData2(X,Y,data,LatMin,LatMax,LongMin,LongMax,sizex=25,sizey=8,labelx=
     m.drawparallels(np.arange(LatMin,LatMax,10),labels=[True],linewidth=1, color='white')
     m.drawmeridians(np.arange(LongMin,LongMax,10),labels=[True,False,False,True],linewidth=1, color='white')
 
-    m.pcolormesh(X, Y, data, latlon=True)
+    if vrange == None:
+        m.pcolormesh(X, Y, data, latlon=True)
+    else:
+        vmin,vmax = vrange[0],vrange[1]
+        norm = mpl.colors.Normalize(vmin=vmin, vmax=vmax)
+        m.pcolormesh(X, Y, data, latlon=True,norm=norm)
+        
     cb = m.colorbar()
     cb.set_label(labelz)
+    
     plt.title(title)
     if (longs != None) & (lats != None):
         x,y = m(longs,lats)
