@@ -14,6 +14,6 @@
 
 # Commands to be submitted:
 export YEAR="2025"
-export OBSERVATORY="mpl" 
+export OBSERVATORY="lsst" 
 source /pbs/throng/lsst/users/dagoret/desc/${YEAR}/setup_anaconda3-py311.sh
 python ScanMERRA2_tavg1_2d_aer_Nx_M2T1NXAEROneYear_obs_year.py -y ${YEAR} -o ${OBSERVATORY}

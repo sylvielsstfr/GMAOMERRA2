@@ -2,7 +2,7 @@
 
 # SLURM options:
 
-#SBATCH --job-name=gmao17    # Job name
+#SBATCH --job-name=gmao25    # Job name
 #SBATCH --output=merra2_%j.log   # Standard output and error log
 #SBATCH --partition=lsst,htc               # Partition choice (htc by default)
 #SBATCH --ntasks=1                    # Run a single task
@@ -13,7 +13,7 @@
 
 
 # Commands to be submitted:
-export YEAR="2017"
-export OBSERVATORY="mpl" 
+export YEAR="2025"
+export OBSERVATORY="lsst" 
 source /pbs/throng/lsst/users/dagoret/desc/${YEAR}/setup_anaconda3-py311.sh
 python ScanMERRA2_inst1_2d_asm_Nx_M2I1NXASMOneYear_obs_year.py -y ${YEAR} -o ${OBSERVATORY}
