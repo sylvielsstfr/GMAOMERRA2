@@ -2,7 +2,7 @@
 
 # SLURM options:
 
-#SBATCH --job-name=gmao25    # Job name
+#SBATCH --job-name=gmao17    # Job name
 #SBATCH --output=merra2_%j.log   # Standard output and error log
 #SBATCH --partition=lsst,htc               # Partition choice (htc by default)
 #SBATCH --ntasks=1                    # Run a single task
